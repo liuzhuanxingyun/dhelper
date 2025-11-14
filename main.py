@@ -14,7 +14,7 @@ config = {
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "max_attempts": 10,
         "temperature": 0.7,
-        "max_tokens": 2000,
+        "max_tokens": 500,
         "timeout": 30
     },
     "output": {
@@ -29,9 +29,10 @@ from data_reader import get_patient_data, print_first_five_columns  # 导入新�
 from agents_builder import build_multiagent_team
 from team_runner import run_multiagent_team
 from output_processor import process_and_save_output
+from okg.knowledge_graph import fetch_pubmed_data, build_knowledge_graph, query_knowledge_graph  # 导入 okg 函数
 
 def main():
-
+    
     # 10578915
     imaging_id = input("请输入影像号: ")
 
@@ -43,6 +44,15 @@ def main():
 
     # 输出前五列数据
     print_first_five_columns(patient_data)
+
+    # 新增：构建或查询知识图谱
+    query_term = patient_data.get('disease', 'diabetes')  # 示例：从数据提取，或默认
+    ids = fetch_pubmed_data(query_term, max_results=5)
+    graph = build_knowledge_graph(ids)
+    related_info = query_knowledge_graph(graph, query_term)  # 获取相关文章
+
+    # 修复：将数据转换为字符串拼接
+    enhanced_patient_data = str(patient_data) + f"\n相关医疗知识：{str(related_info)}"
 
     print(f"正在分析影像号 {imaging_id} ...")
 
@@ -74,7 +84,7 @@ def main():
     team = build_multiagent_team(config, agents_info)
 
     # 运行团队推理
-    reasoning_process, analysis_result = run_multiagent_team(patient_data, team)
+    reasoning_process, analysis_result = run_multiagent_team(enhanced_patient_data, team)
 
     # 处理并保存输出
     process_and_save_output(imaging_id, analysis_result, reasoning_process)
