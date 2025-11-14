@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Tuple
-from agents_builder import Agent
+from agents_builder import BaseAgent  # 改为BaseAgent
 
-def run_multiagent_team(patient_data: Dict[str, Any], team: List[Agent]):
+def run_multiagent_team(patient_data: Dict[str, Any], team: List[BaseAgent]):
     """
     运行多智能体团队推理。
     首先输入 patient_data，然后按顺序让四个智能体分析：

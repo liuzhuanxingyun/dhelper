@@ -10,7 +10,7 @@ config = {
     "LLM": {
         "provider": "alibaba_qwen",
         "model": os.getenv("MODEL"),  # 从 .env 读取
-        "api_key": os.getenv("DASHSCOPE_API_KEY"),
+        "api_key": os.getenv("API_KEY"),
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "max_attempts": 10,
         "temperature": 0.7,

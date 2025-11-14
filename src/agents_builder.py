@@ -2,7 +2,7 @@ import os
 from openai import OpenAI
 from typing import List, Dict, Any
 
-class Agent:
+class BaseAgent:
     def __init__(self, name: str, role: str, system_prompt: str, config: Dict[str, Any]):
         self.name = name
         self.role = role
@@ -30,22 +30,22 @@ class Agent:
         except Exception as e:
             return f"Error: {str(e)}"
 
-def build_multiagent_team(config: Dict[str, Any], agents_info: List[Dict[str, Any]]) -> List[Agent]:
+def build_multiagent_team(config: Dict[str, Any], agents_info: List[Dict[str, Any]]) -> List[BaseAgent]:
     agents = []
     for info in agents_info:
-        agent = Agent(
-            name=info["name"],
-            role=info["role"],
-            system_prompt=info["system_prompt"],
-            config=config
-        )
-        # # 发送“你是谁”确认Agent是否创建成功 (建议在稳定后注释掉)
-        # identity_response = agent.think("你是谁")
-        # if identity_response and not identity_response.startswith("Error"):
-        #     print(f"Agent {agent.name} 创建成功: {identity_response}")
-        #     agents.append(agent)
-        # else:
-        #     print(f"Agent {agent.name} 创建失败: {identity_response}")
+        name = info["name"]
+        role = info["role"]
+        system_prompt = info["system_prompt"]
+        
+        # 动态创建子类（继承BaseAgent）
+        class_name = name + "Agent"
+        def __init__(self, config):
+            BaseAgent.__init__(self, name, role, system_prompt, config)
+        
+        cls = type(class_name, (BaseAgent,), {'__init__': __init__})
+        
+        # 创建实例
+        agent = cls(config)
         print(f"Agent {agent.name} 已创建。")
         agents.append(agent)
     
