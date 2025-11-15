@@ -14,7 +14,7 @@ config = {
         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
         "max_attempts": 10,
         "temperature": 0.7,
-        "max_tokens": 500,
+        "max_tokens": 1000,
         "timeout": 30
     },
     "output": {
@@ -61,22 +61,26 @@ def main():
         {
             "name": "Doctor",
             "role": "一阶医生",
-            "system_prompt": "你是一位经验丰富的医生，根据患者信息做出详细的判断和评估。请提供全面的分析。"
+            "system_prompt": "你是一位经验丰富的医生，根据患者信息做出详细的判断和评估。请提供全面的分析。",
+            "max_tokens": 300  # 添加每个代理的max_tokens
         },
         {
             "name": "Checker",
             "role": "检查者",
-            "system_prompt": "你是一位检查者，负责检查医生的评估工作是否到位，包括内容完整性和格式是否正确。请指出任何不足。"
+            "system_prompt": "你是一位检查者，负责检查医生的评估工作是否到位，包括内容完整性和格式是否正确。请指出任何不足。",
+            "max_tokens": 250
         },
         {
             "name": "SecondOrderDoctor",
             "role": "二阶医生",
-            "system_prompt": "你是一位二阶医生，基于一阶医生和检查者的内容，做出二次诊断确认。请验证并确认诊断结果。"
+            "system_prompt": "你是一位二阶医生，基于一阶医生和检查者的内容，做出二次诊断确认。请验证并确认诊断结果。",
+            "max_tokens": 300
         },
         {
             "name": "Summarizer",
             "role": "总结者",
-            "system_prompt": "你是一位总结者，基于医生和检查者的输入，给出最简明的输出。保持简洁明了。"
+            "system_prompt": "你是一位总结者，基于医生和检查者的输入，给出最简明的输出。保持简洁明了。",
+            "max_tokens": 200
         }
     ]
 
